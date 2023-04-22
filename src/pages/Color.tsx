@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect, } from "react";
-import { ColorType, addColor, getColors, deleteColor} from "../services/ColorServices"
+import { ColorType, addColor, getColors, deleteColor, updateColor} from "../services/ColorServices"
 
 
 function Color(){
@@ -17,6 +17,10 @@ function Color(){
         await deleteColor(id);
         setColors (colors.filter((color) => color.id !== id))
     }
+    const updateColorEvent = async (id:number) => {
+        await updateColor(id);
+        setColors (colors.filter((color) => color.id !== id))
+    }
 
     const changeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         setColor(e.target.value);
@@ -30,21 +34,65 @@ function Color(){
         };
         fetchData();
     }, [])
-    
+
+
+//Funciones para aparecer y desaparecer botones EDIT
+    // Aparecer y desaparecer los botones UPDATE Y CANCEL
+    const [visible, setVisible] = useState(false)
+    const handleClick = () => {
+        setVisible(true);
+    }
+    const handleHide = () => {
+        setVisible(false);
+    }
+    const handleBoth = () =>{
+        handleClick();
+        handleHideAdd();
+    }
+
+    //Aparecer y desaparecer el boton Add
+    const [visibleAdd, setVisibleAdd] = useState(true)
+    const handleClickAdd = () => {
+        setVisibleAdd(true);
+    }
+    const handleHideAdd = () => {
+        setVisibleAdd(false);
+    }
+    const handleBothReverse = () =>{
+        handleHide();
+        handleClickAdd();
+    }
+
 
     return (
         <div>
             <h1>Color Managment</h1>
 
-                <span>Color:</span>
-                <input type="text" 
-                    placeholder='Type your new color' 
-                    value={ color }
-                    onChange= { changeInput }/>
-                <button
-                    disabled={ color.length === 0 }
-                    onClick={ addColorEvent }
-                >add</button>
+                <div style={{display:'flex'}}>
+                    <span>Color:</span>
+                    <input type="text" 
+                        placeholder='Type your new color' 
+                        value={ color }
+                        onChange= { changeInput }/>
+
+
+                    { visibleAdd && <div>
+                        <button
+                            id='add'
+                            disabled={ color.length === 0 }
+                            onClick={ addColorEvent }
+                            
+                        >add</button>
+                    </div>}
+
+                    { visible && <div style={{display:'block'}}>
+                        <button
+                            >Update</button>
+                        <button
+                            onClick={ handleBothReverse }
+                        >cancel</button>
+                    </div>}
+                </div>
 
 
                 <ul>
@@ -57,9 +105,14 @@ function Color(){
                                 onClick={ () => deleteColorEvent(color.id) }>
                                     x
                             </button>
-                            <button>
-                                edit
+
+                            <button
+                                id='editColor'
+                                onClick={handleBoth}
+                                >edit
                             </button>
+
+                            
                         </li>
                     ))}
                 </ul>

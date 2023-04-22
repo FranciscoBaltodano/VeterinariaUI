@@ -5,6 +5,10 @@ export interface ColorType {
     descripcion: string;
 }
 
+export interface updateColorType {
+    descripcion: string;
+}
+
 const URI = "http://127.0.0.1:8000"
 
 export async function getColors(): Promise<ColorType[]>{
@@ -28,5 +32,12 @@ export async function deleteColor(id: number): Promise<void> {
     await axios.delete<void>(
         `${URI}/api/colores/${id}`, 
     )
+}
+
+export async function updateColor(id: number): Promise<ColorType> {
+    const response = await axios.put<ColorType>(
+        `${URI}/api/colores/${id}`, 
+    )
+    return response.data;
 }
 

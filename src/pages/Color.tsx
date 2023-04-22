@@ -24,26 +24,13 @@ function Color(){
         const updatedColor = { descripcion: updatedDescription };
         const updated = await updateColor(id, updatedColor);
         setColors(colors.map((color) => (color.id === id ? updated : color)));
-        setUpdatedDescription(""); // Restablecer el campo de entrada después de actualizar el color
+        setUpdatedDescription(""); // Restablecer el campo de entrada
     }
-    
-
-    // async function handleUpdateColor(id: number, updatedDescription: string) {
-    //     const updatedColor = { descripcion: updatedDescription };
-    //     const updated = await updateColor(id, updatedColor);
-    //     setColors(colors.map((color) => (color.id === id ? updated : color)));
-    // }
-    // async function handleUpdateColor(id: number, updatedColor: updateColorType) {
-    //     const updated = await updateColor(id, updatedColor);
-    //     setColors(colors.map((color) => (color.id === id ? updated : color)));
-    // }
-
-
-
 
     const changeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         setColor(e.target.value);
     }
+
 
     useEffect(() => {
         async function fetchData() {
@@ -83,6 +70,7 @@ function Color(){
     }
 
 
+
     return (
         <div>
             <h1>Color Managment</h1>
@@ -90,7 +78,7 @@ function Color(){
                 <div style={{display:'flex'}}>
                     <span>Color:</span>
                     <input type="text" 
-                        placeholder='Type your new color' 
+                        placeholder='Crea un nuevo color' 
                         value={ color }
                         onChange= { changeInput }/>
 
@@ -105,15 +93,23 @@ function Color(){
                     </div>}
 
                     { visible && <div style={{display:'block'}}>
+
                         <button
-                            >Update</button>
+                            onClick={ handleBothReverse }
+                        >Update</button>
                         <button
                             onClick={ handleBothReverse }
                         >cancel</button>
                     </div>}
                 </div>
 
-
+                <span>Update</span>
+                <input
+                    type="text"
+                    placeholder='Edita un color existente'
+                    value={updatedDescription}
+                    onChange={(event) => setUpdatedDescription(event.target.value)}
+                />
                 <ul>
                     { colors.map((color) => (
 
@@ -127,20 +123,19 @@ function Color(){
 
                             <button
                                 id='editColor'
-                                onClick={handleBoth}
-                                >edit
+                                onClick={handleBoth}>
+                                    edit
                             </button>
 
-                            <button onClick={() => handleUpdateColor(color.id)}>Update</button>
+                            <button 
+                                onClick={() => handleUpdateColor(color.id)}>
+                                    Update
+                            </button>
 
                         </li>
                     ))}
                 </ul>
-                <input
-                    type="text"
-                    value={updatedDescription}
-                    onChange={(event) => setUpdatedDescription(event.target.value)}
-                />
+                
         </div>
     );
 };

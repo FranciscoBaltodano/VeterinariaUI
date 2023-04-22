@@ -1,12 +1,14 @@
 import React from 'react';
 import { useState, useEffect, } from "react";
-import { ColorType, addColor, getColors, deleteColor, updateColor} from "../services/ColorServices"
+import { ColorType, addColor, getColors, deleteColor, updateColor, updateColorType} from "../services/ColorServices"
 
 
 function Color(){
 
     const [colors, setColors] = useState<ColorType[]>([]);
     const [color, setColor] = useState<string>("")
+    const [updatedDescription, setUpdatedDescription] = useState("");
+
 
     const addColorEvent = async () => {
         const newColor = await addColor(color);
@@ -17,10 +19,27 @@ function Color(){
         await deleteColor(id);
         setColors (colors.filter((color) => color.id !== id))
     }
-    const updateColorEvent = async (id:number) => {
-        await updateColor(id);
-        setColors (colors.filter((color) => color.id !== id))
+
+    async function handleUpdateColor(id: number) {
+        const updatedColor = { descripcion: updatedDescription };
+        const updated = await updateColor(id, updatedColor);
+        setColors(colors.map((color) => (color.id === id ? updated : color)));
+        setUpdatedDescription(""); // Restablecer el campo de entrada después de actualizar el color
     }
+    
+
+    // async function handleUpdateColor(id: number, updatedDescription: string) {
+    //     const updatedColor = { descripcion: updatedDescription };
+    //     const updated = await updateColor(id, updatedColor);
+    //     setColors(colors.map((color) => (color.id === id ? updated : color)));
+    // }
+    // async function handleUpdateColor(id: number, updatedColor: updateColorType) {
+    //     const updated = await updateColor(id, updatedColor);
+    //     setColors(colors.map((color) => (color.id === id ? updated : color)));
+    // }
+
+
+
 
     const changeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         setColor(e.target.value);
@@ -112,11 +131,16 @@ function Color(){
                                 >edit
                             </button>
 
-                            
+                            <button onClick={() => handleUpdateColor(color.id)}>Update</button>
+
                         </li>
                     ))}
                 </ul>
-
+                <input
+                    type="text"
+                    value={updatedDescription}
+                    onChange={(event) => setUpdatedDescription(event.target.value)}
+                />
         </div>
     );
 };

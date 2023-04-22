@@ -34,10 +34,17 @@ export async function deleteColor(id: number): Promise<void> {
     )
 }
 
-export async function updateColor(id: number): Promise<ColorType> {
+// export async function updateColor(id: number): Promise<ColorType> {
+//     const response = await axios.put<ColorType>(
+//         `${URI}/api/colores/${id}`, 
+//     )
+//     return response.data;
+// }
+
+export async function updateColor(id: number, color: updateColorType): Promise<ColorType> {
     const response = await axios.put<ColorType>(
-        `${URI}/api/colores/${id}`, 
-    )
+        `${URI}/api/colores/${id}`,
+        color
+    );
     return response.data;
 }
-
